@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="description" content="Watch trending movies and TV shows" />
+  <title>Tapanan — Watch Movies & TV Shows</title>
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Tapanan" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="preload" href="css/home.css" as="style">
+  <link rel="preload" href="js/home.js" as="script">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script defer src="js/home.js"></script>
+</head>
+<body>
+  <header class="navbar" id="navbar">
+    <a href="#/" class="brand">
+      <span class="brand-logo">▶</span>
+      <span class="brand-name">Tapanan</span>
+    </a>
+    <div class="navbar-actions">
+      <a href="#/watchlist" class="nav-watchlist-btn" aria-label="My Watchlist">
+        <i class="fa-solid fa-bookmark"></i>
+        <span class="wl-count" id="wl-count" hidden></span>
+      </a>
+      <button class="nav-search-btn" onclick="openSearchModal()" aria-label="Search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav class="nav-links" id="nav-links">
+      <a href="#/" data-route="home" class="active">Home</a>
+      <a href="#/movies" data-route="movies">Movies</a>
+      <a href="#/tv-shows" data-route="tv">TV Shows</a>
+      <a href="#/anime" data-route="anime">Anime</a>
+      <a href="#/kdrama" data-route="kdrama">K-Drama</a>
+      <a href="#/donghua" data-route="donghua">Chinese Anime</a>
+      <a href="#/watchlist" data-route="watchlist">My Watchlist</a>
+    </nav>
+    <div class="nav-backdrop" id="nav-backdrop"></div>
+  </header>
+
+  <div class="view" id="view-home">
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-badges">
+        <span class="hero-type" id="hero-type">Movie</span>
+        <span id="hero-year"></span>
+      </div>
+      <h1 id="hero-title"></h1>
+      <div class="hero-meta">
+        <span class="hero-rating" id="hero-rating"></span>
+        <span class="hero-sep">·</span>
+        <span id="hero-genre"></span>
+      </div>
+      <p class="hero-overview" id="hero-overview"></p>
+      <div class="hero-actions">
+        <button class="btn-primary" id="hero-watch"><i class="fa-solid fa-play"></i> Watch Now</button>
+        <button class="btn-ghost" id="hero-info"><i class="fa-solid fa-circle-info"></i> Details</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    <section class="row" id="collections">
+      <div class="row-head">
+        <h2>Popular Collections</h2>
+      </div>
+      <div class="list landscape" id="collections-list"></div>
+    </section>
+
+    <section class="row" id="trending">
+      <div class="row-head">
+        <h2>Trending Today</h2>
+        <button class="view-all" onclick="scrollRow('trending-list', 1)">View all <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="list" id="trending-list"></div>
+    </section>
+
+    <section class="row" id="movies">
+      <div class="row-head">
+        <h2>Popular Movies</h2>
+        <button class="view-all" onclick="scrollRow('movies-list', 1)">View all <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="list" id="movies-list"></div>
+    </section>
+
+    <section class="row" id="nowplaying">
+      <div class="row-head">
+        <h2>Now Playing in Theaters</h2>
+        <button class="view-all" onclick="scrollRow('nowplaying-list', 1)">View all <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="list" id="nowplaying-list"></div>
+    </section>
+
+    <section class="row" id="toprated">
+      <div class="row-head">
+        <h2>Top Rated Movies</h2>
+        <button class="view-all" onclick="scrollRow('toprated-list', 1)">View all <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="list" id="toprated-list"></div>
+    </section>
+
+    <section class="row" id="tvshows">
+      <div class="row-head">
+        <h2>Popular TV Shows</h2>
+        <button class="view-all" onclick="scrollRow('tvshows-list', 1)">View all <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="list" id="tvshows-list"></div>
+    </section>
+
+    <section class="row" id="animerow">
+      <div class="row-head">
+        <h2>Trending Anime</h2>
+        <button class="view-all" onclick="location.hash='#/anime'">View all <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="list" id="anime-list"></div>
+    </section>
+
+    <section class="row" id="kdramarow">
+      <div class="row-head">
+        <h2>Trending K-Drama</h2>
+        <button class="view-all" onclick="location.hash='#/kdrama'">View all <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="list" id="kdrama-list"></div>
+    </section>
+
+    <section class="row" id="donghuarow">
+      <div class="row-head">
+        <h2>Trending Chinese Anime</h2>
+        <button class="view-all" onclick="location.hash='#/donghua'">View all <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="list" id="donghua-list"></div>
+    </section>
+  </main>
+  </div><!-- /view-home -->
+
+  <!-- Movies page -->
+  <section class="view page-view" id="view-movies" hidden>
+    <div class="page-head">
+      <h1>Movies</h1>
+      <p>Discover and watch your favorite movies</p>
+    </div>
+    <div class="tabs" id="movies-tabs"></div>
+    <h2 class="grid-title" id="movies-grid-title">Popular Movies</h2>
+    <div class="grid" id="movies-grid"></div>
+    <div class="pager" id="movies-pager"></div>
+  </section>
+
+  <!-- TV Shows page -->
+  <section class="view page-view" id="view-tv" hidden>
+    <div class="page-head">
+      <h1>TV Shows</h1>
+      <p>Discover and watch your favorite TV series</p>
+    </div>
+    <div class="tabs" id="tv-tabs"></div>
+    <h2 class="grid-title" id="tv-grid-title">Popular TV Shows</h2>
+    <div class="grid" id="tv-grid"></div>
+    <div class="pager" id="tv-pager"></div>
+  </section>
+
+  <!-- Anime page -->
+  <section class="view page-view" id="view-anime" hidden>
+    <div class="page-head">
+      <h1>Anime</h1>
+      <p>Discover and watch your favorite anime series</p>
+    </div>
+    <div class="tabs" id="anime-tabs"></div>
+    <h2 class="grid-title" id="anime-grid-title">Popular Anime</h2>
+    <div class="grid" id="anime-grid"></div>
+    <div class="pager" id="anime-pager"></div>
+  </section>
+
+  <!-- K-Drama page -->
+  <section class="view page-view" id="view-kdrama" hidden>
+    <div class="page-head">
+      <h1>K-Drama</h1>
+      <p>The best Korean dramas, all in one place</p>
+    </div>
+    <div class="tabs" id="kdrama-tabs"></div>
+    <h2 class="grid-title" id="kdrama-grid-title">Popular K-Dramas</h2>
+    <div class="grid" id="kdrama-grid"></div>
+    <div class="pager" id="kdrama-pager"></div>
+  </section>
+
+  <!-- Chinese Anime (Donghua) page -->
+  <section class="view page-view" id="view-donghua" hidden>
+    <div class="page-head">
+      <h1>Chinese Anime</h1>
+      <p>Donghua — animation from China</p>
+    </div>
+    <div class="tabs" id="donghua-tabs"></div>
+    <h2 class="grid-title" id="donghua-grid-title">Popular Chinese Anime</h2>
+    <div class="grid" id="donghua-grid"></div>
+    <div class="pager" id="donghua-pager"></div>
+  </section>
+
+  <!-- Watchlist page -->
+  <section class="view page-view" id="view-watchlist" hidden>
+    <div class="page-head">
+      <h1>My Watchlist</h1>
+    </div>
+    <div class="wl-empty" id="watchlist-empty" hidden>
+      <div class="wl-empty-icon"><i class="fa-solid fa-bookmark"></i></div>
+      <h3>Your watchlist is empty</h3>
+      <p>Add movies and TV shows to your watchlist to keep track of what you want to watch.</p>
+    </div>
+    <div class="grid" id="watchlist-grid"></div>
+  </section>
+
+  <!-- Detail modal -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button class="close" onclick="closeModal()" aria-label="Close">&times;</button>
+      <div id="modal-main">
+        <div class="modal-body">
+          <img id="modal-image" src="" alt="" loading="lazy" onclick="openZoom()" title="Tap to zoom" style="cursor:zoom-in" />
+          <div class="modal-text">
+            <h2 id="modal-title"></h2>
+            <div class="stars" id="modal-rating"></div>
+            <p id="modal-description"></p>
+            <button class="wl-btn" id="modal-watchlist" onclick="toggleModalWatchlist()"><i class="fa-solid fa-bookmark"></i><span>Add to Watchlist</span></button>
+          </div>
+        </div>
+        <div class="server-selector" id="modal-server-wrap">
+          <label for="server"><i class="fa-solid fa-server"></i> Server:</label>
+          <select id="server" onchange="changeServer()"><!-- options built by JS --></select>
+          <button id="adblock-toggle" onclick="toggleAdblock()" title="Toggle ad blocker">AdBlock: ON</button>
+          <button id="anime-track-toggle" onclick="toggleAnimeTrack()" title="Sub or Dub" style="display:none">SUB</button>
+        </div>
+        <div class="episode-selector" id="modal-episode-wrap" style="display:none">
+          <label for="season"><i class="fa-solid fa-layer-group"></i> Season:</label>
+          <select id="season" onchange="onSeasonChange()"></select>
+          <label for="episode"><i class="fa-solid fa-list-ol"></i> Episode:</label>
+          <select id="episode" onchange="onEpisodeChange()"></select>
+        </div>
+        <div class="dns-note" id="dns-note">
+          <div class="dns-note-head">
+            <i class="fa-solid fa-shield-halved"></i> Fewer ads? Use a private DNS:
+            <button class="dns-dismiss" onclick="dismissDnsNote()" aria-label="Dismiss">×</button>
+          </div>
+          <div class="dns-item">
+            <span class="dns-label">DNS-over-TLS / QUIC</span>
+            <code id="dns-tls">e79632.dns.nextdns.io</code>
+            <button class="dns-copy" onclick="copyDns('dns-tls', this)">Copy</button>
+          </div>
+          <div class="dns-item">
+            <span class="dns-label">DNS-over-HTTPS</span>
+            <code id="dns-https">https://dns.nextdns.io/e79632</code>
+            <button class="dns-copy" onclick="copyDns('dns-https', this)">Copy</button>
+          </div>
+          <div class="dns-hint">On Android: Settings → Network &amp; internet → Private DNS → enter the TLS hostname above.</div>
+        </div>
+        <div class="video-wrap" id="modal-video-wrap">
+          <iframe id="modal-video" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+        </div>
+        <div class="parts-grid" id="modal-parts" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-modal" id="search-modal" role="dialog" aria-modal="true">
+    <button class="close" onclick="closeSearchModal()" aria-label="Close search">&times;</button>
+    <div class="search-box">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="search-input" placeholder="Search movies, shows..." oninput="searchTMDB()" autocomplete="off" />
+    </div>
+    <div class="results" id="search-results"></div>
+  </div>
+
+  <!-- Zoom lightbox -->
+  <div class="zoom-overlay" id="zoom-overlay" onclick="if(event.target.id==='zoom-overlay')closeZoom()">
+    <button class="close" onclick="closeZoom()" aria-label="Close zoom">&times;</button>
+    <div class="zoom-controls">
+      <button onclick="zoomStep(1.4)" aria-label="Zoom in">+</button>
+      <button onclick="zoomStep(1/1.4)" aria-label="Zoom out">&minus;</button>
+    </div>
+    <img id="zoom-image" src="" alt="Zoomed poster" />
+    <p class="zoom-hint"><i class="fa-solid fa-expand"></i> Drag to pan &middot; tap outside to close</p>
+  </div>
+
+  <!-- AI assistant -->
+  <button class="ai-fab" id="ai-fab" aria-label="Chat with Tapanan AI"><i class="fa-solid fa-robot"></i></button>
+  <div class="ai-panel" id="ai-panel" hidden role="dialog" aria-label="Tapanan AI chat">
+    <div class="ai-header">
+      <i class="fa-solid fa-robot"></i><span>Tapanan AI</span>
+      <button class="close" id="ai-close" aria-label="Close chat">&times;</button>
+    </div>
+    <div class="ai-messages" id="ai-messages"></div>
+    <div class="ai-input-row">
+      <input type="text" id="ai-input" placeholder="Ask for a movie or show..." autocomplete="off" maxlength="2000" />
+      <button id="ai-send" aria-label="Send"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand"><span class="brand-logo">▶</span> Tapanan</div>
+      <p>&copy; 2025 Tapanan. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#">Disclaimer</a>
+        <a href="#">About Us</a>
+        <a href="#">Contact Us</a>
+      </div>
+      <span class="visit-counter" id="visit-counter" hidden><i class="fa-solid fa-eye"></i><b id="visit-count">…</b>&nbsp;visits</span>
+    </div>
+  </footer>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function () {});
+      });
+    }
+  </script>
+</body>
+</html>
