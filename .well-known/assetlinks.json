@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.tapanan.app",
+    "sha256_cert_fingerprints": ["6E280D884FA539D8634EDB37FD5FB48BEAA5215B161B68796F8E46AACE417597"]
+  }
+}]
